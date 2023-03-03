@@ -8,6 +8,10 @@ Be creative! do whatever you want!
 - Import things from your .base module
 """
 
+def demo_subcommand(subparser):
+    from .sources import get_subcommands
+    get_subcommands(subparser.add_subparsers())
+
 
 def main():  # pragma: no cover
     """
@@ -26,10 +30,12 @@ def main():  # pragma: no cover
         * Run an application (Flask, FastAPI, Django, etc.)
     """
     from argparse import ArgumentParser
-    from .sources import get_subcommands
+    from sys import argv
     parser = ArgumentParser()
     subparsers = parser.add_subparsers()
-    get_subcommands(subparsers)
+    demo_subcommand(subparsers.add_parser('demo'))
     args = vars(parser.parse_args())
     if args.get('fn'):
-        args.fn(**args.copy())
+        args['fn'](**args.copy())
+    else:
+        parser.parse_args([*argv[1:], "--help"])

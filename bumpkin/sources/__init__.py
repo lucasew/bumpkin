@@ -31,6 +31,7 @@ def get_subcommands(subparser):
             obj = source(**kwargs)
             print(obj.reduce())
         parser = subparser.add_parser(source_name)
+        parser.add_argument('-v,--verbose', dest="verbose", action='store_true')
         parser.set_defaults(fn=payload_fn)
         source.argparse(parser)
 
