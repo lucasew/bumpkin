@@ -1,1 +1,1 @@
-from .sources import setup_source, eval_node, eval_nodes
+from .sources import eval_node, eval_nodes, setup_source  # noqa: F401

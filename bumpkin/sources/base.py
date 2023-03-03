@@ -1,5 +1,3 @@
-from argparse import ArgumentParser
-
 class BaseSource:
     SOURCE_KEY = "_base"
 
@@ -12,4 +10,3 @@ class BaseSource:
     @classmethod
     def argparse(cls, parser):
         return parser
-
