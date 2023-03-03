@@ -1,3 +1,5 @@
+from argparse import ArgumentParser
+
 class BaseSource:
     SOURCE_KEY = "_base"
 
@@ -6,3 +8,8 @@ class BaseSource:
 
     def reduce(self, **kwargs):
         raise Exception("Unimplemented")
+
+    @classmethod
+    def argparse(cls, parser):
+        return parser
+

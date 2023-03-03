@@ -25,4 +25,11 @@ def main():  # pragma: no cover
         * List all available tasks
         * Run an application (Flask, FastAPI, Django, etc.)
     """
-    print("This will do something")
+    from argparse import ArgumentParser
+    from .sources import get_subcommands
+    parser = ArgumentParser()
+    subparsers = parser.add_subparsers()
+    get_subcommands(subparsers)
+    args = vars(parser.parse_args())
+    if args.get('fn'):
+        args.fn(**args.copy())
