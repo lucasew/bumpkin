@@ -1,9 +1,10 @@
 from .base import BaseSource
 from .basichttp import BasicHTTPSource
+from .basicgithub import BasicGitHubSource
 
 sources = {}
 
-default_sources = [BasicHTTPSource]
+default_sources = [BasicHTTPSource, BasicGitHubSource]
 
 
 def setup_source(source):
