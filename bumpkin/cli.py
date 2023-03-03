@@ -1,3 +1,7 @@
+import logging
+logger = logging.getLogger(__name__)
+logging.basicConfig()
+
 """CLI interface for bumpkin project.
 
 Be creative! do whatever you want!
@@ -9,8 +13,28 @@ Be creative! do whatever you want!
 """
 
 def demo_subcommand(subparser):
+    subparser.description = "Execute specific bump modules with specified arguments"
     from .sources import get_subcommands
     get_subcommands(subparser.add_subparsers())
+
+def eval_subcommand(subparser):
+    from pathlib import Path
+    subparser.description = "Evaluate a bumpkin formatted JSON to an output"
+    subparser.add_argument('-v,--verbose', dest="verbose", action='store_true')
+    subparser.add_argument('-i,--input', dest="input_file", type=Path, required=True)
+    subparser.add_argument('-o,--output', dest="output_file", type=Path, required=True)
+    def handle(input_file, output_file, verbose, **kwargs):
+        from json import loads, dumps
+        from .sources import eval_nodes
+        assert input_file.exists(), f"'{input_file.resolve()}' does not exist"
+        input_file_data = loads(input_file.read_text())
+        output_file_data = None
+        if output_file.exists():
+            output_file_data = loads(output_file.read_text())
+        processed = eval_nodes(input_file_data, output_file_data, verbose=verbose)
+        output_file.write_text(dumps(processed))
+    subparser.set_defaults(fn=handle)
+    # todo implement
 
 
 def main():  # pragma: no cover
@@ -34,7 +58,14 @@ def main():  # pragma: no cover
     parser = ArgumentParser()
     subparsers = parser.add_subparsers()
     demo_subcommand(subparsers.add_parser('demo'))
+    eval_subcommand(subparsers.add_parser('eval'))
     args = vars(parser.parse_args())
+
+    if args.get('verbose'):
+        logger.root.setLevel(logging.DEBUG)
+    else:
+        logger.root.setLevel(logging.INFO)
+
     if args.get('fn'):
         args['fn'](**args.copy())
     else:

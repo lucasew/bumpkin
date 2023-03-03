@@ -1,0 +1,24 @@
+{
+  "x86_64-linux": {
+    "stable": {
+        "_type": "basichttp",
+        "url": "https://discord.com/api/download?platform=linux&format=tar.gz"
+    },
+    "ptb": {
+        "_type": "basichttp",
+        "url": "https://discord.com/api/download/ptb?platform=linux&format=tar.gz"
+    },
+    "canary": {
+        "_type": "basichttp",
+        "url": "https://discord.com/api/download/canary?platform=linux&format=tar.gz"
+    }
+  },
+  "x86_64-darwin": {
+    "stable": "https://discord.com/api/download?platform=osx",
+    "ptb": "https://discord.com/api/download/ptb?platform=osx",
+    "canary": "https://discord.com/api/download/canary?platform=osx"
+  },
+  "aarch64-darwin": {
+    "ptb": "https://discord.com/api/download/ptb?platform=osx"
+  }
+}

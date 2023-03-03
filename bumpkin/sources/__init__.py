@@ -15,15 +15,15 @@ def setup_source(source):
 for default_source in default_sources:
     setup_source(default_source)
 
-def handle_node(declaration, previous_data=dict()):
-    assert typeof(declaration) == dict, 'declaration type must be a object/dictionary'
-    assert typeof(previous_data) == dict, 'previous data type must be a object/dictionary'
+def eval_node(declaration, previous_data=dict(), verbose=False):
+    assert type(declaration) == dict, 'declaration type must be a object/dictionary'
+    assert type(previous_data) == dict, 'previous data type must be a object/dictionary'
     assert type(declaration['_type']) == str, 'declaration error: type of _type must be string'
     source_type = declaration['_type']
     assert sources.get(source_type) is not None, f'source type {source_type} is not defined or not available'
     declaration.pop('_type')
     source = sources[source_type]
-    return source(**declaration).reduce(**previous_data)
+    return source(**declaration, verbose=verbose).reduce(**previous_data)
 
 def get_subcommands(subparser):
     for source_name, source in sources.items():
@@ -34,5 +34,21 @@ def get_subcommands(subparser):
         parser.add_argument('-v,--verbose', dest="verbose", action='store_true')
         parser.set_defaults(fn=payload_fn)
         source.argparse(parser)
+
+def eval_nodes(declaration=None, previous_data=None, verbose=False):
+    if type(declaration) == dict:
+        if declaration.get('_type'):
+            return eval_node(declaration, previous_data if type(previous_data) == dict else dict())
+        else:
+            ret = {}
+            for k, v in declaration.items():
+                prev = None
+                if type(previous_data) == dict:
+                    prev = previous_data.get(k)
+                ret[k] = eval_nodes(v, prev, verbose=verbose)
+            return ret
+    if type(declaration) == list:
+        raise Exception("lists are not supported in bumpkit manifests due to the possibility of the shift problem")
+    return declaration
 
 
