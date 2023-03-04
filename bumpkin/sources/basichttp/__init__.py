@@ -1,6 +1,6 @@
 import logging
 
-from .base import BaseSource
+from ..base import BaseSource
 
 logger = logging.getLogger(__name__)
 
