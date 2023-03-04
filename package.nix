@@ -1,9 +1,15 @@
-{ buildPythonPackage, pytest }:
-buildPythonPackage {
-  pname = "bumpkin";
-  version = builtins.readFile ./bumpkin/VERSION;
+{ buildPythonPackage, pytest, callPackage }:
+let
+  bumpkin = buildPythonPackage {
+    pname = "bumpkin";
+    version = builtins.readFile ./bumpkin/VERSION;
 
-  src = ./.;
+    src = ./.;
 
-  checkInputs = [ pytest ];
-}
+    checkInputs = [ pytest ];
+
+    passthru = {
+      loadBumpkin = callPackage ./bumpkin/sources { inherit bumpkin; };
+    };
+  };
+in bumpkin

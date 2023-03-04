@@ -16,7 +16,7 @@ class BasicGitHubSource(BaseSource):
         repo: str,
         ref=None,
         user_agent="curl/7.83.1",
-        file_type="zip",
+        file_type="tar.gz",
         rehash_if_same_url=False,
         verbose=False,
         **kwargs,
@@ -114,6 +114,7 @@ class BasicGitHubSource(BaseSource):
                 hasher.update(buf)
             ret["sha256"] = hasher.hexdigest()
         ret["final_url"] = res.url
+        ret['file_type'] = self.file_type
         return ret
 
     @classmethod
