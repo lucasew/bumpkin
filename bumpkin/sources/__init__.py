@@ -1,8 +1,10 @@
-from .base import BaseSource
-from .basichttp import BasicHTTPSource
-from .basicgithub import BasicGitHubSource
+from typing import Dict
 
-sources = {}
+from .base import BaseSource
+from .basicgithub import BasicGitHubSource
+from .basichttp import BasicHTTPSource
+
+sources: Dict[str, BaseSource] = {}
 
 default_sources = [BasicHTTPSource, BasicGitHubSource]
 
