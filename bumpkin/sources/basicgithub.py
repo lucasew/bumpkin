@@ -37,12 +37,13 @@ class BasicGitHubSource(BaseSource):
     def _get_default_branch(self):
         from json import load
         from urllib import request
+        url = f"https://api.github.com/repos/{self.owner}/{self.repo}"
         res = request.urlopen(
-            request.Request(f"https://api.github.com/repos/{self.owner}/{self.repo}", headers=self.headers)
+            request.Request(url, headers=self.headers)
         )
         jres = load(res)
+        logger.debug(url, jres)
         default_branch = jres['default_branch']
-        self.ref = default_branch
         return self.ref
 
 
@@ -55,13 +56,16 @@ class BasicGitHubSource(BaseSource):
         if self.ref is None:
             if ret.get('default_branch') is None:
                 ret['default_branch'] = self._get_default_branch()
+            self.ref = ret['default_branch']
+
+        assert self.ref is not None, 'ref must not be None'
 
 
         self.commit_id = None
         for prefix in PREFIXES:
             try:
                 url = f"https://api.github.com/repos/{self.owner}/{self.repo}/git/matching-refs{prefix}/{self.ref}"
-                print(url)
+                logger.debug(url)
                 res = request.urlopen(
                     request.Request(url, headers=self.headers)
                 )
@@ -75,20 +79,20 @@ class BasicGitHubSource(BaseSource):
                         jres = load(res)
                         self.commit_id = jres['object']['sha']
                     else:
-                        print(obj)
                         self.commit_id = obj['sha']
             except request.HTTPError:
                 continue
         assert self.commit_id is not None, f'ref {self.ref} is not valid for {self.owner}/{self.repo}'
         ret['github_commit'] = self.commit_id
+        logger.info(f"{self.owner}/{self.repo} latest github commit for ref {self.ref} is {self.commit_id}")
 
         res = request.urlopen(
-            request.Request(f"https://github.com/{self.owner}/{self.repo}/archive/{self.commit_id}.{self.file_type}", headers=headers)
+            request.Request(f"https://github.com/{self.owner}/{self.repo}/archive/{self.commit_id}.{self.file_type}", headers=self.headers)
         )
         resolved_url = res.url
         logger.debug(
             dict(
-                url=self.url,
+                url=resolved_url,
                 rehash_if_same_url=self.rehash_if_same_url,
                 user_agent=self.user_agent,
             )
