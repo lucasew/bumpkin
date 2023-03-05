@@ -114,7 +114,7 @@ class BasicGitHubSource(BaseSource):
                 hasher.update(buf)
             ret["sha256"] = hasher.hexdigest()
         ret["final_url"] = res.url
-        ret['file_type'] = self.file_type
+        ret["file_type"] = self.file_type
         return ret
 
     @classmethod
@@ -122,6 +122,8 @@ class BasicGitHubSource(BaseSource):
         parser.add_argument("owner", type=str)
         parser.add_argument("repo", type=str)
         parser.add_argument("-b,--ref", type=str)
-        parser.add_argument("-t,--file-type", choices=["tar.gz", "zip"], default="tar.gz")
+        parser.add_argument(
+            "-t,--file-type", choices=["tar.gz", "zip"], default="tar.gz"
+        )
         parser.add_argument("-r,--rehash-if-same-url", action="store_true")
         return parser

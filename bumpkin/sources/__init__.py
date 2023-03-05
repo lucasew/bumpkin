@@ -7,7 +7,11 @@ from .basichttpjsonvendor import BasicHTTPJSONVendorSource
 
 sources: Dict[str, BaseSource] = {}
 
-default_sources = [BasicHTTPSource, BasicGitHubSource, BasicHTTPJSONVendorSource]
+default_sources = [
+    BasicHTTPSource,
+    BasicGitHubSource,
+    BasicHTTPJSONVendorSource,
+]
 
 
 def setup_source(source):

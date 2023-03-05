@@ -22,8 +22,8 @@ class BasicHTTPJSONVendorSource(BaseSource):
         self.verbose = verbose
 
     def reduce(self, **kwargs):
-        from urllib import request
         from json import load
+        from urllib import request
 
         ret = kwargs
         res = request.urlopen(
@@ -37,7 +37,7 @@ class BasicHTTPJSONVendorSource(BaseSource):
             )
         )
         ret = load(res)
-        ret['final_url'] = res.url
+        ret["final_url"] = res.url
 
         return ret
 
