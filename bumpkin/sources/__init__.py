@@ -3,10 +3,11 @@ from typing import Dict
 from .base import BaseSource
 from .basicgithub import BasicGitHubSource
 from .basichttp import BasicHTTPSource
+from .basichttpjsonvendor import BasicHTTPJSONVendorSource
 
 sources: Dict[str, BaseSource] = {}
 
-default_sources = [BasicHTTPSource, BasicGitHubSource]
+default_sources = [BasicHTTPSource, BasicGitHubSource, BasicHTTPJSONVendorSource]
 
 
 def setup_source(source):

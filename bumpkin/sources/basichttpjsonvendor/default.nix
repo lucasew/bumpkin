@@ -1,0 +1,3 @@
+{ fetchurl }:
+{ declared, fetched }:
+fetched
