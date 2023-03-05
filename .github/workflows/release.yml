@@ -25,6 +25,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           body_path: release_message.md
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
     needs: release
