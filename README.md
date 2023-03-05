@@ -77,7 +77,7 @@ The basic primitive of bumpkin is a source, which is basically a reducer.
 
 The reducer takes some parameters such as the URL, and exposes a `reduce` method. This method takes the previous state of the result data, or a empty dictionary, changes and then returns the new data. So, if the plugin has some handling to not refetch stuff if the URL or latest version didn't changed, for example, it has everything it needs at hand.
 
-## Install it from PyPI (in the future)
+## Install it from PyPI
 
 ```bash
 pip install bumpkin
