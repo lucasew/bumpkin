@@ -4,6 +4,12 @@ Changelog
 
 (unreleased)
 ------------
+- README: remove '(in the future)' [lucasew]
+
+
+0.0.2 (2023-03-05)
+------------------
+- Release: version 0.0.2 🚀 [lucasew]
 - Setup.py: change pypi description. [lucasew]
 
 
