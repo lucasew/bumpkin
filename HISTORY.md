@@ -4,6 +4,15 @@ Changelog
 
 (unreleased)
 ------------
+- Verbose is setup globally by the logger so no need to pass verbose
+  parameters around. [lucasew]
+- Sources: fix bug where all bumpkin demo use the basichttpjsonvendor
+  fetcher. [lucasew]
+
+
+0.0.3 (2023-03-05)
+------------------
+- Release: version 0.0.3 🚀 [lucasew]
 - README: remove '(in the future)' [lucasew]
 
 
