@@ -4,6 +4,8 @@ Changelog
 
 (unreleased)
 ------------
+- Actions: add missing token. [lucasew]
+- Release: version 0.1.0 🚀 [lucasew]
 - Actions: fix broken yaml, i guess. [lucasew]
 - Actions: run linux tests before other OS tests. [lucasew]
 - Lintwork. [lucasew]
