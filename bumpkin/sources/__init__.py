@@ -1,9 +1,12 @@
+import logging
 from typing import Dict
 
 from .base import BaseSource
 from .basicgithub import BasicGitHubSource
 from .basichttp import BasicHTTPSource
 from .basichttpjsonvendor import BasicHTTPJSONVendorSource
+
+logger = logging.getLogger(__name__)
 
 sources: Dict[str, BaseSource] = {}
 
@@ -48,17 +51,19 @@ def eval_node(declaration, previous_data=dict(), verbose=False):
 
 
 def get_subcommands(subparser):
-    for source_name, source in sources.items():
-
+    def make_source_payload_function(source):
         def payload_fn(**kwargs):
             obj = source(**kwargs)
             print(obj.reduce())
 
+        return payload_fn
+
+    for source_name, source in sources.items():
         parser = subparser.add_parser(source_name)
         parser.add_argument(
             "-v,--verbose", dest="verbose", action="store_true"
         )
-        parser.set_defaults(fn=payload_fn)
+        parser.set_defaults(fn=make_source_payload_function(source))
         source.argparse(parser)
 
 
