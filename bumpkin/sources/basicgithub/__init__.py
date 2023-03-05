@@ -119,6 +119,9 @@ class BasicGitHubSource(BaseSource):
 
     @classmethod
     def argparse(cls, parser):
-        parser.add_argument("url", type=str)
+        parser.add_argument("owner", type=str)
+        parser.add_argument("repo", type=str)
+        parser.add_argument("-b,--ref", type=str)
+        parser.add_argument("-t,--file-type", choices=["tar.gz", "zip"], default="tar.gz")
         parser.add_argument("-r,--rehash-if-same-url", action="store_true")
         return parser
