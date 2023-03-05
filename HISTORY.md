@@ -4,6 +4,12 @@ Changelog
 
 (unreleased)
 ------------
+- Setup.py: change pypi description. [lucasew]
+
+
+0.0.1 (2023-03-05)
+------------------
+- Release: version 0.0.1 🚀 [lucasew]
 - Actions: add missing token. [lucasew]
 - Release: version 0.1.0 🚀 [lucasew]
 - Actions: fix broken yaml, i guess. [lucasew]
