@@ -13,13 +13,11 @@ class BasicHTTPSource(BaseSource):
         url: str,
         rehash_if_same_url=False,
         user_agent="curl/7.83.1",
-        verbose=False,
         **kwargs,
     ):
         self.url = url
         self.user_agent = user_agent
         self.rehash_if_same_url = rehash_if_same_url
-        self.verbose = verbose
 
     def reduce(self, **kwargs):
         from urllib import request

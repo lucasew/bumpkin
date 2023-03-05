@@ -31,7 +31,7 @@ for default_source in default_sources:
     setup_source(default_source)
 
 
-def eval_node(declaration, previous_data=dict(), verbose=False):
+def eval_node(declaration, previous_data=dict()):
     assert (
         type(declaration) == dict
     ), "declaration type must be a object/dictionary"
@@ -47,7 +47,7 @@ def eval_node(declaration, previous_data=dict(), verbose=False):
     ), f"source type {source_type} is not defined or not available"
     declaration.pop("_type")
     source = sources[source_type]
-    return source(**declaration, verbose=verbose).reduce(**previous_data)
+    return source(**declaration).reduce(**previous_data)
 
 
 def get_subcommands(subparser):
@@ -67,7 +67,7 @@ def get_subcommands(subparser):
         source.argparse(parser)
 
 
-def eval_nodes(declaration=None, previous_data=None, verbose=False):
+def eval_nodes(declaration=None, previous_data=None):
     if type(declaration) == dict:
         if declaration.get("_type"):
             return eval_node(
@@ -80,7 +80,7 @@ def eval_nodes(declaration=None, previous_data=None, verbose=False):
                 prev = None
                 if type(previous_data) == dict:
                     prev = previous_data.get(k)
-                ret[k] = eval_nodes(v, prev, verbose=verbose)
+                ret[k] = eval_nodes(v, prev)
             return ret
     if type(declaration) == list:
         raise Exception(

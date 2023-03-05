@@ -18,7 +18,6 @@ class BasicGitHubSource(BaseSource):
         user_agent="curl/7.83.1",
         file_type="tar.gz",
         rehash_if_same_url=False,
-        verbose=False,
         **kwargs,
     ):
         self.owner = owner
@@ -26,7 +25,6 @@ class BasicGitHubSource(BaseSource):
         self.ref = ref
         self.headers = {"User-Agent": user_agent}
         self.user_agent = user_agent
-        self.verbose = verbose
         self.file_type = file_type
         self.rehash_if_same_url = rehash_if_same_url
 

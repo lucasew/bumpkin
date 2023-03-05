@@ -35,7 +35,7 @@ def eval_subcommand(subparser):
         "-o,--output", dest="output_file", type=Path, required=True
     )
 
-    def handle(input_file, output_file, verbose, **kwargs):
+    def handle(input_file, output_file, **kwargs):
         from json import dumps, loads
 
         from .sources import eval_nodes
@@ -45,9 +45,7 @@ def eval_subcommand(subparser):
         output_file_data = None
         if output_file.exists():
             output_file_data = loads(output_file.read_text())
-        processed = eval_nodes(
-            input_file_data, output_file_data, verbose=verbose
-        )
+        processed = eval_nodes(input_file_data, output_file_data)
         output_file.write_text(dumps(processed))
 
     subparser.set_defaults(fn=handle)
