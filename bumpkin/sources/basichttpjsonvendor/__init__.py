@@ -43,5 +43,6 @@ class BasicHTTPJSONVendorSource(BaseSource):
 
     @classmethod
     def argparse(cls, parser):
+        parser.description = "Like basichttp but passes through the JSON content as the return value instead of instructing how to download it"
         parser.add_argument("url", type=str)
         return parser

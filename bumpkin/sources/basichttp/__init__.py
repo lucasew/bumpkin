@@ -53,6 +53,7 @@ class BasicHTTPSource(BaseSource):
 
     @classmethod
     def argparse(cls, parser):
+        parser.description = "Basic fetcher for HTTP"
         parser.add_argument("url", type=str)
         parser.add_argument("-r,--rehash-if-same-url", action="store_true")
         return parser

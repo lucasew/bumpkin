@@ -119,6 +119,7 @@ class BasicGitHubSource(BaseSource):
 
     @classmethod
     def argparse(cls, parser):
+        parser.description = "Basic fetcher for GitHub"
         parser.add_argument("owner", type=str)
         parser.add_argument("repo", type=str)
         parser.add_argument("-b,--ref", type=str)

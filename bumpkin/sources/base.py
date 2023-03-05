@@ -9,4 +9,5 @@ class BaseSource:
 
     @classmethod
     def argparse(cls, parser):
+        raise Exception("Unimplemented")
         return parser
