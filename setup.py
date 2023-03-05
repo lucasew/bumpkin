@@ -32,7 +32,7 @@ def read_requirements(path):
 setup(
     name="bumpkin",
     version=read("bumpkin", "VERSION"),
-    description="Awesome bumpkin created by lucasew",
+    description="Tool to do source bumps",
     url="https://github.com/lucasew/bumpkin/",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
