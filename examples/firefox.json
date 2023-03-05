@@ -1,0 +1,8 @@
+{
+  "extensions": {
+    "tampermonkey": {
+      "_type": "basichttpjsonvendor",
+      "url": "https://addons.mozilla.org/api/v5/addons/addon/tampermonkey/"
+    }
+  }
+}
