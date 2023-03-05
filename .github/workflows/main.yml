@@ -54,7 +54,7 @@ jobs:
         #   fail_ci_if_error: true
 
   tests_mac:
-    needs: linter
+    needs: linter tests_linux
     strategy:
       fail-fast: false
       matrix:
@@ -72,7 +72,7 @@ jobs:
         run: make test
 
   tests_win:
-    needs: linter
+    needs: linter tests_linux
     strategy:
       fail-fast: false
       matrix:
