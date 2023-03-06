@@ -4,6 +4,12 @@ Changelog
 
 (unreleased)
 ------------
+- Save old state if assertion error when evaluating node. [lucasew]
+
+
+0.0.7 (2023-03-06)
+------------------
+- Release: version 0.0.7 🚀 [lucasew]
 - Resilience work. [lucasew]
 
 
