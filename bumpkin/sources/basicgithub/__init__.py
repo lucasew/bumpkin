@@ -47,7 +47,14 @@ class BasicGitHubSource(BaseSource):
         from json import load
         from urllib import request
 
-        logger.debug(dict(owner=self.owner, repo=self.repo, ref=self.ref, file_type=self.file_type))
+        logger.debug(
+            dict(
+                owner=self.owner,
+                repo=self.repo,
+                ref=self.ref,
+                file_type=self.file_type,
+            )
+        )  # noqa: E501
 
         ret = kwargs
 
