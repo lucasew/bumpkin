@@ -41,7 +41,8 @@ class BasicGitHubSource(BaseSource):
         res = request.urlopen(request.Request(url, headers=self.headers))
         jres = load(res)
         logger.debug(url, jres)
-        return jres["default_branch"]
+        branch = jres["default_branch"]
+        return f"heads/{branch}"
 
     def reduce(self, **kwargs):
         from json import load

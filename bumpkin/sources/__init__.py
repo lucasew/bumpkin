@@ -56,7 +56,12 @@ def eval_node(declaration, previous_data=dict()):
             f"Unhandled HTTP error while evaluating node {declaration}, saving old state..."  # noqa: E501
         )
         logger.info(e)
-        return previous_data
+    except Exception as e:
+        logger.info(
+            f"Unhandled generic exception while evaluating node {declaration}, saving old state"  # noqa: E501
+        )
+        logger.info(e)
+    return previous_data
 
 
 def get_subcommands(subparser):
