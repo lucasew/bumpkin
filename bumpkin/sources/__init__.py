@@ -61,6 +61,12 @@ def eval_node(declaration, previous_data=dict()):
             f"Unhandled generic exception while evaluating node {declaration}, saving old state"  # noqa: E501
         )
         logger.info(e)
+    except AssertionError as e:
+        logger.info(
+            f"Failed assertion while evaluating node {declaration}, saving old state"  # noqa: E501
+        )
+        logger.info(e)
+
     return previous_data
 
 
