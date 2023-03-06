@@ -4,6 +4,14 @@ Changelog
 
 (unreleased)
 ------------
+- Lintwork. [lucasew]
+- Basicgithub: minor tweaks. [lucasew]
+- Flake. [lucasew]
+
+
+0.0.4 (2023-03-05)
+------------------
+- Release: version 0.0.4 🚀 [lucasew]
 - Verbose is setup globally by the logger so no need to pass verbose
   parameters around. [lucasew]
 - Sources: fix bug where all bumpkin demo use the basichttpjsonvendor
