@@ -4,6 +4,12 @@ Changelog
 
 (unreleased)
 ------------
+- Resilience work. [lucasew]
+
+
+0.0.6 (2023-03-06)
+------------------
+- Release: version 0.0.6 🚀 [lucasew]
 - Assume old state is best if unhandled HTTP error, useful to not lose
   progress if github ratelimit kicks in. [lucasew]
 
