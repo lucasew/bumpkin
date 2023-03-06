@@ -47,6 +47,8 @@ class BasicGitHubSource(BaseSource):
         from json import load
         from urllib import request
 
+        logger.debug(dict(owner=self.owner, repo=self.repo, ref=self.ref, file_type=self.file_type))
+
         ret = kwargs
 
         if self.ref is None:
@@ -73,8 +75,10 @@ class BasicGitHubSource(BaseSource):
                         )
                         jres = load(res)
                         self.commit_id = jres["object"]["sha"]
+                        break
                     else:
                         self.commit_id = obj["sha"]
+                        break
             except request.HTTPError:
                 continue
         assert (
