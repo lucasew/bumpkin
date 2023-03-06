@@ -32,6 +32,8 @@ for default_source in default_sources:
 
 
 def eval_node(declaration, previous_data=dict()):
+    from urllib import request
+
     assert (
         type(declaration) == dict
     ), "declaration type must be a object/dictionary"
@@ -47,7 +49,14 @@ def eval_node(declaration, previous_data=dict()):
     ), f"source type {source_type} is not defined or not available"
     declaration.pop("_type")
     source = sources[source_type]
-    return source(**declaration).reduce(**previous_data)
+    try:
+        return source(**declaration).reduce(**previous_data)
+    except request.HTTPError as e:
+        logger.info(
+            f"Unhandled HTTP error while evaluating node {declaration}, saving old state..."  # noqa: E501
+        )
+        logger.info(e)
+        return previous_data
 
 
 def get_subcommands(subparser):

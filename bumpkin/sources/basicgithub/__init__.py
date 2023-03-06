@@ -86,8 +86,10 @@ class BasicGitHubSource(BaseSource):
                     else:
                         self.commit_id = obj["sha"]
                         break
-            except request.HTTPError:
-                continue
+            except request.HTTPError as e:
+                if e.code == 404:
+                    continue
+                raise e
         assert (
             self.commit_id is not None
         ), f"ref {self.ref} is not valid for {self.owner}/{self.repo}"
