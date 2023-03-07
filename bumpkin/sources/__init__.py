@@ -64,6 +64,11 @@ def eval_node(declaration, previous_data=dict()):
             f"Unhandled generic exception while evaluating node {declaration}, saving old state"  # noqa: E501
         )
         logger.info(e)
+    except KeyboardInterrupt as e:
+        logger.info(
+            f"Saving work and exiting..."
+        )
+        raise e
     except AssertionError as e:
         logger.info(
             f"Failed assertion while evaluating node {declaration}, saving old state"  # noqa: E501
@@ -101,14 +106,17 @@ def list_nodes(declaration=None, previous_data=None, _key=[]):
     else:
         is_node_populated = type(previous_data) is dict and len(previous_data.keys()) > 0
         ret = {}
+        ret[".".join(_key)] = 1 if previous_data is not None else 0
         try:
             ret[".".join(_key)] = previous_data['_bpk_last_update']
         except KeyError:
-            ret[".".join(_key)] = 1 if previous_data is not None else 0
+            pass
+        except TypeError:
+            pass
         return ret
 
 
-def eval_nodes(declaration=None, previous_data=None):
+def eval_nodes_recursively(declaration=None, previous_data=None):
     if type(declaration) == dict:
         if declaration.get("_type"):
             return eval_node(
@@ -128,3 +136,32 @@ def eval_nodes(declaration=None, previous_data=None):
             "lists are not supported in bumpkit manifests due to the possibility of the shift problem"  # noqa: E501
         )
     return declaration
+
+def eval_nodes_key(declaration=None, previous_data=None, key=[]):
+    if len(key) == 0:
+        return eval_nodes_recursively(declaration, previous_data)
+    ret = previous_data if type(previous_data) is dict else dict()
+    ret[key[0]] = eval_nodes_key(
+        declaration=declaration.get(key[0]) if type(declaration) is dict else None,
+        previous_data=previous_data.get(key[0]) if type(previous_data) is dict else None,
+        key=key[1:]
+    )
+    return ret
+
+def eval_nodes(declaration=None, previous_data=None, keys=[]):
+    listed_nodes = list_nodes(declaration, previous_data)
+    if len(keys) == 0:
+        keys = list(listed_nodes.keys())
+
+    ordered_keys = keys  # older updates first
+    ordered_keys.sort(key = lambda x: listed_nodes.get(x) or 0)
+
+    ret = previous_data if type(previous_data) is dict else dict()
+    for key in ordered_keys:
+        keylist = key.split(".")
+        try:
+            ret = eval_nodes_key(declaration, ret, keylist)
+        except KeyboardInterrupt:
+            return ret
+    return ret
+

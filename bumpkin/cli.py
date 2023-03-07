@@ -36,7 +36,7 @@ def eval_subcommand(subparser):
     )
     subparser.add_argument(dest="keys", nargs="*", type=str, help="Bump only these keys. If ommited, bump all.")
 
-    def handle(input_file, output_file, **kwargs):
+    def handle(input_file, output_file, keys, **kwargs):
         from json import dumps, loads
 
         from .sources import eval_nodes
@@ -46,7 +46,7 @@ def eval_subcommand(subparser):
         output_file_data = None
         if output_file.exists():
             output_file_data = loads(output_file.read_text())
-        processed = eval_nodes(input_file_data, output_file_data)
+        processed = eval_nodes(input_file_data, output_file_data, keys)
         output_file.write_text(dumps(processed))
 
     subparser.set_defaults(fn=handle)
