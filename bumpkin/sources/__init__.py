@@ -32,8 +32,8 @@ for default_source in default_sources:
 
 
 def eval_node(declaration, previous_data=dict()):
-    from urllib import request
     from time import time
+    from urllib import request
 
     assert (
         type(declaration) == dict
@@ -52,7 +52,7 @@ def eval_node(declaration, previous_data=dict()):
     source = sources[source_type]
     try:
         ret = source(**declaration).reduce(**previous_data)
-        ret['_bpk_last_update'] = int(time())
+        ret["_bpk_last_update"] = int(time())
         return ret
     except request.HTTPError as e:
         logger.info(
@@ -65,9 +65,7 @@ def eval_node(declaration, previous_data=dict()):
         )
         logger.info(e)
     except KeyboardInterrupt as e:
-        logger.info(
-            f"Saving work and exiting..."
-        )
+        logger.info("Saving work and exiting...")
         raise e
     except AssertionError as e:
         logger.info(
@@ -94,21 +92,30 @@ def get_subcommands(subparser):
         parser.set_defaults(fn=make_source_payload_function(source))
         source.argparse(parser)
 
+
 def list_nodes(declaration=None, previous_data=None, _key=[]):
     if type(declaration) is not dict:
         return {}
-    if declaration.get('_type') is None:
+    if declaration.get("_type") is None:
         ret = {}
         for k in declaration.keys():
             key = [*_key, k]
-            ret = {**ret, **list_nodes(declaration.get(k), previous_data.get(k) if type(previous_data) is dict else None, key)}
+            ret = {
+                **ret,
+                **list_nodes(
+                    declaration.get(k),
+                    previous_data.get(k)
+                    if type(previous_data) is dict
+                    else None,
+                    key,
+                ),
+            }
         return ret
     else:
-        is_node_populated = type(previous_data) is dict and len(previous_data.keys()) > 0
         ret = {}
         ret[".".join(_key)] = 1 if previous_data is not None else 0
         try:
-            ret[".".join(_key)] = previous_data['_bpk_last_update']
+            ret[".".join(_key)] = previous_data["_bpk_last_update"]
         except KeyError:
             pass
         except TypeError:
@@ -137,16 +144,22 @@ def eval_nodes_recursively(declaration=None, previous_data=None):
         )
     return declaration
 
+
 def eval_nodes_key(declaration=None, previous_data=None, key=[]):
     if len(key) == 0:
         return eval_nodes_recursively(declaration, previous_data)
     ret = previous_data if type(previous_data) is dict else dict()
     ret[key[0]] = eval_nodes_key(
-        declaration=declaration.get(key[0]) if type(declaration) is dict else None,
-        previous_data=previous_data.get(key[0]) if type(previous_data) is dict else None,
-        key=key[1:]
+        declaration=declaration.get(key[0])
+        if type(declaration) is dict
+        else None,
+        previous_data=previous_data.get(key[0])
+        if type(previous_data) is dict
+        else None,
+        key=key[1:],
     )
     return ret
+
 
 def eval_nodes(declaration=None, previous_data=None, keys=[]):
     listed_nodes = list_nodes(declaration, previous_data)
@@ -154,7 +167,7 @@ def eval_nodes(declaration=None, previous_data=None, keys=[]):
         keys = list(listed_nodes.keys())
 
     ordered_keys = keys  # older updates first
-    ordered_keys.sort(key = lambda x: listed_nodes.get(x) or 0)
+    ordered_keys.sort(key=lambda x: listed_nodes.get(x) or 0)
 
     ret = previous_data if type(previous_data) is dict else dict()
     for key in ordered_keys:
@@ -164,4 +177,3 @@ def eval_nodes(declaration=None, previous_data=None, keys=[]):
         except KeyboardInterrupt:
             return ret
     return ret
-

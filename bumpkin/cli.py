@@ -34,7 +34,12 @@ def eval_subcommand(subparser):
     subparser.add_argument(
         "-o,--output", dest="output_file", type=Path, required=True
     )
-    subparser.add_argument(dest="keys", nargs="*", type=str, help="Bump only these keys. If ommited, bump all.")
+    subparser.add_argument(
+        dest="keys",
+        nargs="*",
+        type=str,
+        help="Bump only these keys. If ommited, bump all.",
+    )
 
     def handle(input_file, output_file, keys, **kwargs):
         from json import dumps, loads
@@ -52,6 +57,7 @@ def eval_subcommand(subparser):
     subparser.set_defaults(fn=handle)
     # todo implement
 
+
 def list_subcommand(subparser):
     from pathlib import Path
 
@@ -64,12 +70,11 @@ def list_subcommand(subparser):
         "-o,--output", dest="output_file", type=Path, required=True
     )
     subparser.add_argument(
-        "-s,--show-state", dest="show_state", action='store_true'
+        "-s,--show-state", dest="show_state", action="store_true"
     )
 
     def handle(input_file, output_file, show_state=False, **kwargs):
-        from json import dumps, loads
-
+        from json import loads
         from .sources import list_nodes
 
         assert input_file.exists(), f"'{input_file.resolve()}' does not exist"
