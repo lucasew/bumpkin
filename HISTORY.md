@@ -4,6 +4,16 @@ Changelog
 
 (unreleased)
 ------------
+- Eval_nodes: ignore missing keys. [lucasew]
+- Option to not generate minified json. [lucasew]
+- Lintwork. [lucasew]
+- Selective bump, bump older items first. [lucasew]
+- Command to list nodes in a json. [lucasew]
+
+
+0.0.8 (2023-03-06)
+------------------
+- Release: version 0.0.8 🚀 [lucasew]
 - Save old state if assertion error when evaluating node. [lucasew]
 
 
