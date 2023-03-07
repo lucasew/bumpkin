@@ -34,6 +34,7 @@ def eval_subcommand(subparser):
     subparser.add_argument(
         "-o,--output", dest="output_file", type=Path, required=True
     )
+    subparser.add_argument(dest="keys", nargs="*", type=str, help="Bump only these keys. If ommited, bump all.")
 
     def handle(input_file, output_file, **kwargs):
         from json import dumps, loads
@@ -47,6 +48,43 @@ def eval_subcommand(subparser):
             output_file_data = loads(output_file.read_text())
         processed = eval_nodes(input_file_data, output_file_data)
         output_file.write_text(dumps(processed))
+
+    subparser.set_defaults(fn=handle)
+    # todo implement
+
+def list_subcommand(subparser):
+    from pathlib import Path
+
+    subparser.description = "List bumpable nodes in JSON"
+    subparser.add_argument("-v,--verbose", dest="verbose", action="store_true")
+    subparser.add_argument(
+        "-i,--input", dest="input_file", type=Path, required=True
+    )
+    subparser.add_argument(
+        "-o,--output", dest="output_file", type=Path, required=True
+    )
+    subparser.add_argument(
+        "-s,--show-state", dest="show_state", action='store_true'
+    )
+
+    def handle(input_file, output_file, show_state=False, **kwargs):
+        from json import dumps, loads
+
+        from .sources import list_nodes
+
+        assert input_file.exists(), f"'{input_file.resolve()}' does not exist"
+        input_file_data = loads(input_file.read_text())
+        output_file_data = None
+        if output_file.exists():
+            output_file_data = loads(output_file.read_text())
+        nodes = list_nodes(input_file_data, output_file_data)
+        node_keys = list(nodes.keys())
+        node_keys.sort()
+        for node in node_keys:
+            if show_state:
+                print(node, nodes[node])
+            else:
+                print(node)
 
     subparser.set_defaults(fn=handle)
     # todo implement
@@ -75,12 +113,15 @@ def main():  # pragma: no cover
     subparsers = parser.add_subparsers()
     demo_subcommand(subparsers.add_parser("demo"))
     eval_subcommand(subparsers.add_parser("eval"))
+    list_subcommand(subparsers.add_parser("list"))
     args = vars(parser.parse_args())
 
     if args.get("verbose"):
         logger.root.setLevel(logging.DEBUG)
     else:
         logger.root.setLevel(logging.INFO)
+
+    logger.debug(f"args: {args}")
 
     if args.get("fn"):
         args["fn"](**args.copy())

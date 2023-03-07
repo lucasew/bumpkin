@@ -33,6 +33,7 @@ for default_source in default_sources:
 
 def eval_node(declaration, previous_data=dict()):
     from urllib import request
+    from time import time
 
     assert (
         type(declaration) == dict
@@ -50,7 +51,9 @@ def eval_node(declaration, previous_data=dict()):
     declaration.pop("_type")
     source = sources[source_type]
     try:
-        return source(**declaration).reduce(**previous_data)
+        ret = source(**declaration).reduce(**previous_data)
+        ret['_bpk_last_update'] = int(time())
+        return ret
     except request.HTTPError as e:
         logger.info(
             f"Unhandled HTTP error while evaluating node {declaration}, saving old state..."  # noqa: E501
@@ -85,6 +88,24 @@ def get_subcommands(subparser):
         )
         parser.set_defaults(fn=make_source_payload_function(source))
         source.argparse(parser)
+
+def list_nodes(declaration=None, previous_data=None, _key=[]):
+    if type(declaration) is not dict:
+        return {}
+    if declaration.get('_type') is None:
+        ret = {}
+        for k in declaration.keys():
+            key = [*_key, k]
+            ret = {**ret, **list_nodes(declaration.get(k), previous_data.get(k) if type(previous_data) is dict else None, key)}
+        return ret
+    else:
+        is_node_populated = type(previous_data) is dict and len(previous_data.keys()) > 0
+        ret = {}
+        try:
+            ret[".".join(_key)] = previous_data['_bpk_last_update']
+        except KeyError:
+            ret[".".join(_key)] = 1 if previous_data is not None else 0
+        return ret
 
 
 def eval_nodes(declaration=None, previous_data=None):
