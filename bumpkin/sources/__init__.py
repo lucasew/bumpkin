@@ -163,8 +163,15 @@ def eval_nodes_key(declaration=None, previous_data=None, key=[]):
 
 def eval_nodes(declaration=None, previous_data=None, keys=[]):
     listed_nodes = list_nodes(declaration, previous_data)
-    if len(keys) == 0:
+    _keys = []
+    for key in keys:
+        if listed_nodes.get(key) is not None:
+            _keys.append(key)
+
+    if len(_keys) == 0:
         keys = list(listed_nodes.keys())
+    else:
+        keys = _keys
 
     ordered_keys = keys  # older updates first
     ordered_keys.sort(key=lambda x: listed_nodes.get(x) or 0)
