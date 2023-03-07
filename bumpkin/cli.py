@@ -35,13 +35,19 @@ def eval_subcommand(subparser):
         "-o,--output", dest="output_file", type=Path, required=True
     )
     subparser.add_argument(
+        "-p,--pretty",
+        dest="indent",
+        help="Enable JSON identations instead of minified",
+        action="store_true",
+    )
+    subparser.add_argument(
         dest="keys",
         nargs="*",
         type=str,
         help="Bump only these keys. If ommited, bump all.",
     )
 
-    def handle(input_file, output_file, keys, **kwargs):
+    def handle(input_file, output_file, keys, indent, **kwargs):
         from json import dumps, loads
 
         from .sources import eval_nodes
@@ -52,7 +58,7 @@ def eval_subcommand(subparser):
         if output_file.exists():
             output_file_data = loads(output_file.read_text())
         processed = eval_nodes(input_file_data, output_file_data, keys)
-        output_file.write_text(dumps(processed))
+        output_file.write_text(dumps(processed, indent=4 if indent else None))
 
     subparser.set_defaults(fn=handle)
     # todo implement
@@ -75,6 +81,7 @@ def list_subcommand(subparser):
 
     def handle(input_file, output_file, show_state=False, **kwargs):
         from json import loads
+
         from .sources import list_nodes
 
         assert input_file.exists(), f"'{input_file.resolve()}' does not exist"
