@@ -32,7 +32,7 @@ def eval_subcommand(subparser):
         "-i,--input", dest="input_file", type=Path, required=True
     )
     subparser.add_argument(
-        "-o,--output", dest="output_file", type=Path, required=True
+        "-o,--output", dest="output_file", type=Path
     )
     subparser.add_argument(
         "-p,--pretty",
@@ -47,13 +47,16 @@ def eval_subcommand(subparser):
         help="Bump only these keys. If ommited, bump all.",
     )
 
-    def handle(input_file, output_file, keys, indent, **kwargs):
+    def handle(input_file, keys, indent, output_file=None, **kwargs):
         from json import dumps, loads
 
         from .sources import eval_nodes
 
         assert input_file.exists(), f"'{input_file.resolve()}' does not exist"
         input_file_data = loads(input_file.read_text())
+
+        if output_file is None:
+            output_file = Path(str(input_file) + ".lock")
         output_file_data = None
         if output_file.exists():
             output_file_data = loads(output_file.read_text())
@@ -73,18 +76,20 @@ def list_subcommand(subparser):
         "-i,--input", dest="input_file", type=Path, required=True
     )
     subparser.add_argument(
-        "-o,--output", dest="output_file", type=Path, required=True
+        "-o,--output", dest="output_file", type=Path
     )
     subparser.add_argument(
         "-s,--show-state", dest="show_state", action="store_true"
     )
 
-    def handle(input_file, output_file, show_state=False, **kwargs):
+    def handle(input_file, output_file=None, show_state=False, **kwargs):
         from json import loads
 
         from .sources import list_nodes
 
         assert input_file.exists(), f"'{input_file.resolve()}' does not exist"
+        if output_file is None:
+            output_file = Path(str(input_file) + ".lock")
         input_file_data = loads(input_file.read_text())
         output_file_data = None
         if output_file.exists():

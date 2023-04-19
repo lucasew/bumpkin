@@ -167,6 +167,10 @@ def eval_nodes(declaration=None, previous_data=None, keys=[]):
     for key in keys:
         if listed_nodes.get(key) is not None:
             _keys.append(key)
+        else:
+            for listed in listed_nodes:
+                if listed.startswith(key):
+                    _keys.append(listed)
 
     if len(_keys) == 0:
         keys = list(listed_nodes.keys())
