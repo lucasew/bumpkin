@@ -4,6 +4,14 @@ Changelog
 
 (unreleased)
 ------------
+- Lintwork. [lucasew]
+- Fix bump everything because full name not specified + optional output
+  file. [lucasew]
+
+
+0.0.9 (2023-03-07)
+------------------
+- Release: version 0.0.9 🚀 [lucasew]
 - Eval_nodes: ignore missing keys. [lucasew]
 - Option to not generate minified json. [lucasew]
 - Lintwork. [lucasew]
