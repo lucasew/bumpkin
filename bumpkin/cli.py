@@ -31,9 +31,7 @@ def eval_subcommand(subparser):
     subparser.add_argument(
         "-i,--input", dest="input_file", type=Path, required=True
     )
-    subparser.add_argument(
-        "-o,--output", dest="output_file", type=Path
-    )
+    subparser.add_argument("-o,--output", dest="output_file", type=Path)
     subparser.add_argument(
         "-p,--pretty",
         dest="indent",
@@ -75,9 +73,7 @@ def list_subcommand(subparser):
     subparser.add_argument(
         "-i,--input", dest="input_file", type=Path, required=True
     )
-    subparser.add_argument(
-        "-o,--output", dest="output_file", type=Path
-    )
+    subparser.add_argument("-o,--output", dest="output_file", type=Path)
     subparser.add_argument(
         "-s,--show-state", dest="show_state", action="store_true"
     )
