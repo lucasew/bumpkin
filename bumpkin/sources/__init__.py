@@ -18,12 +18,10 @@ default_sources = [
 
 
 def setup_source(source):
-    assert issubclass(
-        source, BaseSource
-    ), f"class {source} is not based on BaseSource"
-    assert (
-        sources.get(source.SOURCE_KEY) is None
-    ), f"class {source} has the samekey ({source.SOURCE_KEY}) as {sources.get(source.SOURCE_KEY)}"  # noqa: E501
+    assert issubclass(source, BaseSource), f"class {source} is not based on BaseSource"
+    assert sources.get(source.SOURCE_KEY) is None, (
+        f"class {source} has the samekey ({source.SOURCE_KEY}) as {sources.get(source.SOURCE_KEY)}"
+    )  # noqa: E501
     sources[source.SOURCE_KEY] = source
 
 
@@ -35,19 +33,15 @@ def eval_node(declaration, previous_data=dict()):
     from time import time
     from urllib import request
 
-    assert (
-        type(declaration) == dict
-    ), "declaration type must be a object/dictionary"
-    assert (
-        type(previous_data) == dict
-    ), "previous data type must be a object/dictionary"
-    assert (
-        type(declaration["_type"]) == str
-    ), "declaration error: type of _type must be string"
+    assert type(declaration) == dict, "declaration type must be a object/dictionary"
+    assert type(previous_data) == dict, "previous data type must be a object/dictionary"
+    assert type(declaration["_type"]) == str, (
+        "declaration error: type of _type must be string"
+    )
     source_type = declaration["_type"]
-    assert (
-        sources.get(source_type) is not None
-    ), f"source type {source_type} is not defined or not available"
+    assert sources.get(source_type) is not None, (
+        f"source type {source_type} is not defined or not available"
+    )
     declaration.pop("_type")
     source = sources[source_type]
     try:
@@ -86,9 +80,7 @@ def get_subcommands(subparser):
 
     for source_name, source in sources.items():
         parser = subparser.add_parser(source_name)
-        parser.add_argument(
-            "-v,--verbose", dest="verbose", action="store_true"
-        )
+        parser.add_argument("-v,--verbose", dest="verbose", action="store_true")
         parser.set_defaults(fn=make_source_payload_function(source))
         source.argparse(parser)
 
@@ -104,9 +96,7 @@ def list_nodes(declaration=None, previous_data=None, _key=[]):
                 **ret,
                 **list_nodes(
                     declaration.get(k),
-                    previous_data.get(k)
-                    if type(previous_data) is dict
-                    else None,
+                    previous_data.get(k) if type(previous_data) is dict else None,
                     key,
                 ),
             }
@@ -150,9 +140,7 @@ def eval_nodes_key(declaration=None, previous_data=None, key=[]):
         return eval_nodes_recursively(declaration, previous_data)
     ret = previous_data if type(previous_data) is dict else dict()
     ret[key[0]] = eval_nodes_key(
-        declaration=declaration.get(key[0])
-        if type(declaration) is dict
-        else None,
+        declaration=declaration.get(key[0]) if type(declaration) is dict else None,
         previous_data=previous_data.get(key[0])
         if type(previous_data) is dict
         else None,

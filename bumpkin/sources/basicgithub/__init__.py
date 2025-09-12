@@ -71,9 +71,7 @@ class BasicGitHubSource(BaseSource):
             try:
                 url = f"https://api.github.com/repos/{self.owner}/{self.repo}/git/matching-refs{prefix}/{self.ref}"  # noqa: E501
                 logger.debug(url)
-                res = request.urlopen(
-                    request.Request(url, headers=self.headers)
-                )
+                res = request.urlopen(request.Request(url, headers=self.headers))
                 jres = load(res)
                 if len(jres) > 0:
                     obj = jres[0]["object"]
@@ -91,9 +89,9 @@ class BasicGitHubSource(BaseSource):
                 if e.code == 404:
                     continue
                 raise e
-        assert (
-            self.commit_id is not None
-        ), f"ref {self.ref} is not valid for {self.owner}/{self.repo}"
+        assert self.commit_id is not None, (
+            f"ref {self.ref} is not valid for {self.owner}/{self.repo}"
+        )
         ret["github_commit"] = self.commit_id
         logger.info(
             f"{self.owner}/{self.repo} latest github commit for ref {self.ref} is {self.commit_id}"  # noqa: E501
