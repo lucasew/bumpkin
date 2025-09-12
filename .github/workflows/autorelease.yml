@@ -76,8 +76,8 @@ jobs:
       run: |
         if [[ ! -z "$NEW_VERSION" ]]; then
           NO_TAG=1 ./make_release "$NEW_VERSION"
-          echo "New version: $(cat ./ritm_annotation/VERSION)" >> $GITHUB_STEP_SUMMARY
-          echo "RELEASE_VERSION=$(cat ./ritm_annotation/VERSION)" >> $GITHUB_ENV
+          echo "New version: $(cat ./bumpkin/VERSION)" >> $GITHUB_STEP_SUMMARY
+          echo "RELEASE_VERSION=$(cat ./bumpkin/VERSION)" >> $GITHUB_ENV
         fi
 
     - name: Create relase
@@ -97,7 +97,7 @@ jobs:
         TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       if: env.RELEASE_VERSION != ''
       run: |
-        VERSION="$(cat ritm_annotation/VERSION)"
+        VERSION="$(cat bumpkin/VERSION)"
         docker build -t "$TAG:$VERSION" . -f Containerfile
         docker tag "$TAG:$VERSION" "$TAG:latest"
         docker push "$TAG:$VERSION"
