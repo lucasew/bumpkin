@@ -15,9 +15,7 @@ Be creative! do whatever you want!
 
 
 def demo_subcommand(subparser):
-    subparser.description = (
-        "Execute specific bump modules with specified arguments"
-    )
+    subparser.description = "Execute specific bump modules with specified arguments"
     from .sources import get_subcommands
 
     get_subcommands(subparser.add_subparsers())
@@ -28,9 +26,7 @@ def eval_subcommand(subparser):
 
     subparser.description = "Evaluate a bumpkin formatted JSON to an output"
     subparser.add_argument("-v,--verbose", dest="verbose", action="store_true")
-    subparser.add_argument(
-        "-i,--input", dest="input_file", type=Path, required=True
-    )
+    subparser.add_argument("-i,--input", dest="input_file", type=Path, required=True)
     subparser.add_argument("-o,--output", dest="output_file", type=Path)
     subparser.add_argument(
         "-p,--pretty",
@@ -70,13 +66,9 @@ def list_subcommand(subparser):
 
     subparser.description = "List bumpable nodes in JSON"
     subparser.add_argument("-v,--verbose", dest="verbose", action="store_true")
-    subparser.add_argument(
-        "-i,--input", dest="input_file", type=Path, required=True
-    )
+    subparser.add_argument("-i,--input", dest="input_file", type=Path, required=True)
     subparser.add_argument("-o,--output", dest="output_file", type=Path)
-    subparser.add_argument(
-        "-s,--show-state", dest="show_state", action="store_true"
-    )
+    subparser.add_argument("-s,--show-state", dest="show_state", action="store_true")
 
     def handle(input_file, output_file=None, show_state=False, **kwargs):
         from json import loads
