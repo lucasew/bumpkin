@@ -1,0 +1,26 @@
+[project]
+name = "bumpkin"
+dynamic = ["version"]
+description = "Tool to do source bumps"
+readme = "README.md"
+dependencies = []
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+
+[tool.hatch.build.targets.wheel]
+packages = ["bumpkin"]
+
+[tool.hatch.version]
+path = "bumpkin/VERSION"
+pattern = "^(?P<version>[^$]*)"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+]
+
+[project.scripts]
+bumpkin = "bumpkin.__main__:main"
