@@ -13,16 +13,11 @@ help = "Format code using ruff."
 [tasks.lint]
 run = "ruff check ."
 help = "Run ruff linter."
-depends = ["install"]
 
 [tasks.test]
-run = [
-  "uv run pytest -v --cov-config .coveragerc --cov=bumpkin -l --tb=short --maxfail=1 tests/",
-  "uv run coverage xml",
-  "uv run coverage html",
-]
+run = "uv run pytest -v --cov-config .coveragerc --cov=bumpkin -l --tb=short --maxfail=1 tests/ && uv run coverage xml && uv run coverage html"
 help = "Run tests and generate coverage report."
-depends = ["lint"]
+depends = ["install", "lint"]
 
 [tasks.check]
 depends = ["lint", "test"]
