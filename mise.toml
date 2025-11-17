@@ -4,37 +4,37 @@ ruff = "latest"
 
 [tasks.install]
 run = "uv pip install -e .[dev]"
-help = "Install the project in dev mode."
+description = "Install the project in dev mode."
 
 [tasks.fmt]
 run = "ruff format ."
-help = "Format code using ruff."
+description = "Format code using ruff."
 
 [tasks."fmt:check"]
 run = "ruff format --check ."
-help = "Check code formatting using ruff."
+description = "Check code formatting using ruff."
 
 [tasks.lint]
 run = "ruff check ."
-help = "Run ruff linter."
+description = "Run ruff linter."
 
 [tasks."test:pytest"]
 run = "uv run pytest -v --cov-config .coveragerc --cov=bumpkin -l --tb=short --maxfail=1 tests/"
-help = "Run pytest."
+description = "Run pytest."
 depends = ["install", "lint"]
 
 [tasks."test:coverage-xml"]
 run = "uv run coverage xml"
-help = "Generate coverage xml report."
+description = "Generate coverage xml report."
 depends = ["test:pytest"]
 
 [tasks."test:coverage-html"]
 run = "uv run coverage html"
-help = "Generate coverage html report."
+description = "Generate coverage html report."
 depends = ["test:pytest"]
 
 [tasks.test]
-help = "Run all tests."
+description = "Run all tests."
 depends = ["test:*"]
 
 [tasks.check]
@@ -53,4 +53,4 @@ git tag "$TAG"
 git push -u origin HEAD --tags
 echo "Github Actions will detect the new tag and release the new version."
 """
-help = "Create a new tag for release."
+description = "Create a new tag for release."
