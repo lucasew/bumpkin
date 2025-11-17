@@ -10,6 +10,10 @@ help = "Install the project in dev mode."
 run = "ruff format ."
 help = "Format code using ruff."
 
+[tasks."fmt:check"]
+run = "ruff format --check ."
+help = "Check code formatting using ruff."
+
 [tasks.lint]
 run = "ruff check ."
 help = "Run ruff linter."
@@ -34,7 +38,7 @@ help = "Run all tests."
 depends = ["test:*"]
 
 [tasks.check]
-depends = ["lint", "test"]
+depends = ["fmt:check", "lint", "test"]
 
 [tasks.release]
 run = """
