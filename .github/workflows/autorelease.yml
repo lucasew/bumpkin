@@ -50,8 +50,6 @@ jobs:
 
     - name: Install dependencies
       run: mise run install
-    - name: Tests
-      run: mise run test
     - name: Format
       run: mise run fmt
 
@@ -75,6 +73,9 @@ jobs:
           echo "The update scripts changed something and a PR was created. Giving up deploy." >> $GITHUB_STEP_SUMMARY
           exit 1
         fi
+
+    - name: Tests
+      run: mise run test
 
     - name: Make release if everything looks right
       env:
