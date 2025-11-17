@@ -48,10 +48,12 @@ jobs:
         git config user.name actions-bot
         git config user.email actions-bot@users.noreply.github.com
 
+    - name: Install dependencies
+      run: mise run install
     - name: Tests
-      run: uv run --with . pytest
+      run: mise run test
     - name: Format
-      run: uv format
+      run: mise run fmt
 
 
     - name: Create Pull Request if there is new stuff from updaters

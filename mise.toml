@@ -1,2 +1,39 @@
 [tools]
 uv = "latest"
+ruff = "latest"
+
+[tasks.install]
+run = "uv pip install -e .[dev]"
+help = "Install the project in dev mode."
+
+[tasks.fmt]
+run = "ruff format ."
+help = "Format code using ruff."
+
+[tasks.lint]
+run = "ruff check ."
+help = "Run ruff linter."
+
+[tasks.test]
+run = [
+  "ruff check .",
+  "uv run pytest -v --cov-config .coveragerc --cov=bumpkin -l --tb=short --maxfail=1 tests/",
+  "uv run coverage xml",
+  "uv run coverage html",
+]
+help = "Run tests and generate coverage report."
+
+[tasks.release]
+run = """
+echo "WARNING: This operation will create s version tag and push to github"
+read -p "Version? (provide the next x.y.z semver) : " TAG
+echo "$TAG" > bumpkin/VERSION
+uv run gitchangelog > HISTORY.md
+git add bumpkin/VERSION HISTORY.md
+git commit -m "release: version $TAG 🚀"
+echo "creating git tag : $TAG"
+git tag "$TAG"
+git push -u origin HEAD --tags
+echo "Github Actions will detect the new tag and release the new version."
+"""
+help = "Create a new tag for release."
