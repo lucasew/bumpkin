@@ -34,7 +34,9 @@ def eval_node(declaration, previous_data=dict()):
     from urllib import request
 
     assert isinstance(declaration, dict), "declaration type must be a object/dictionary"
-    assert isinstance(previous_data, dict), "previous data type must be a object/dictionary"
+    assert isinstance(previous_data, dict), (
+        "previous data type must be a object/dictionary"
+    )
     assert isinstance(declaration["_type"], str), (
         "declaration error: type of _type must be string"
     )
