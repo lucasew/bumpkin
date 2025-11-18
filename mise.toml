@@ -3,7 +3,7 @@ uv = "latest"
 ruff = "latest"
 
 [tasks.install]
-run = "uv sync --with dev"
+run = "uv sync"
 description = "Install the project in dev mode."
 
 [tasks.fmt]
