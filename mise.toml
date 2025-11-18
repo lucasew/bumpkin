@@ -38,4 +38,9 @@ description = "Run all tests."
 depends = ["test:*"]
 
 [tasks.check]
+description = "Run all checks for pull requests."
 depends = ["fmt:check", "lint", "test"]
+
+[tasks."lint-and-test"]
+description = "Run linting and tests."
+depends = ["lint", "test"]

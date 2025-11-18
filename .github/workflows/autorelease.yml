@@ -52,8 +52,14 @@ jobs:
 
     - name: Install dependencies
       run: mise run install
-    - name: Check
+    - name: Run checks for Pull Requests
+      if: github.event_name == 'pull_request'
       run: mise run check
+    - name: Format and test for Main branch
+      if: github.event_name != 'pull_request'
+      run: |
+        mise run fmt
+        mise run "lint-and-test"
 
 
     - name: Create Pull Request if there is new stuff from updaters
