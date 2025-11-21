@@ -33,9 +33,11 @@ def eval_node(declaration, previous_data=dict()):
     from time import time
     from urllib import request
 
-    assert type(declaration) == dict, "declaration type must be a object/dictionary"
-    assert type(previous_data) == dict, "previous data type must be a object/dictionary"
-    assert type(declaration["_type"]) == str, (
+    assert isinstance(declaration, dict), "declaration type must be a object/dictionary"
+    assert isinstance(previous_data, dict), (
+        "previous data type must be a object/dictionary"
+    )
+    assert isinstance(declaration["_type"], str), (
         "declaration error: type of _type must be string"
     )
     source_type = declaration["_type"]
@@ -114,21 +116,21 @@ def list_nodes(declaration=None, previous_data=None, _key=[]):
 
 
 def eval_nodes_recursively(declaration=None, previous_data=None):
-    if type(declaration) == dict:
+    if isinstance(declaration, dict):
         if declaration.get("_type"):
             return eval_node(
                 declaration,
-                previous_data if type(previous_data) == dict else dict(),
+                previous_data if isinstance(previous_data, dict) else dict(),
             )
         else:
             ret = {}
             for k, v in declaration.items():
                 prev = None
-                if type(previous_data) == dict:
+                if isinstance(previous_data, dict):
                     prev = previous_data.get(k)
                 ret[k] = eval_nodes(v, prev)
             return ret
-    if type(declaration) == list:
+    if isinstance(declaration, list):
         raise Exception(
             "lists are not supported in bumpkit manifests due to the possibility of the shift problem"  # noqa: E501
         )

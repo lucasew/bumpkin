@@ -17,9 +17,13 @@ packages = ["bumpkin"]
 path = "bumpkin/VERSION"
 pattern = "^(?P<version>[^$]*)"
 
-[dependency-groups]
+[project.optional-dependencies]
 dev = [
     "pytest>=8.4.2",
+    "pytest-cov",
+    "coverage",
+    "gitchangelog",
+    "mkdocs"
 ]
 
 [project.scripts]

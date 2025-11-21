@@ -1,2 +1,46 @@
 [tools]
 uv = "latest"
+ruff = "latest"
+
+[tasks.install]
+run = "uv sync --extra dev"
+description = "Install the project in dev mode."
+
+[tasks.fmt]
+run = "ruff format ."
+description = "Format code using ruff."
+
+[tasks."fmt:check"]
+run = "ruff format --check ."
+description = "Check code formatting using ruff."
+
+[tasks.lint]
+run = "ruff check ."
+description = "Run ruff linter."
+
+[tasks."test:pytest"]
+run = "uv run pytest -v --cov-config .coveragerc --cov=bumpkin -l --tb=short --maxfail=1 tests/"
+description = "Run pytest."
+depends = ["install", "lint"]
+
+[tasks."test:coverage-xml"]
+run = "uv run coverage xml"
+description = "Generate coverage xml report."
+depends = ["test:pytest"]
+
+[tasks."test:coverage-html"]
+run = "uv run coverage html"
+description = "Generate coverage html report."
+depends = ["test:pytest"]
+
+[tasks.test]
+description = "Run all tests."
+depends = ["test:*"]
+
+[tasks.check]
+description = "Run all checks for pull requests."
+depends = ["fmt:check", "lint", "test"]
+
+[tasks."lint-and-test"]
+description = "Run linting and tests."
+depends = ["lint", "test"]
