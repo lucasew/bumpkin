@@ -7,6 +7,8 @@ on:
     tags:
     - '*'
   pull_request:
+    branches:
+    - main
   workflow_dispatch:
     inputs:
       new_version:
@@ -33,22 +35,15 @@ jobs:
       id-token: write
       pull-requests: write
     steps:
-    - name: Login to registry
-      if: github.event_name != 'pull_request'
-      uses: docker/login-action@v3
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ env.USERNAME }}
-        password: ${{ github.token }}
     - name: Checkout
       uses: actions/checkout@v6
-
-    - uses: jdx/mise-action@v3
 
     - name: Setup git config
       run: |
         git config user.name actions-bot
         git config user.email actions-bot@users.noreply.github.com
+
+    - uses: jdx/mise-action@v3
 
     - name: Install dependencies
       run: mise run install
@@ -96,7 +91,7 @@ jobs:
         fi
 
     - name: Create relase
-      if: github.event_name != 'pull_request' && env.RELEASE_VERSION != ''
+      if: env.RELEASE_VERSION != '' && github.event_name != 'pull_request'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         TAG: ${{ env.RELEASE_VERSION }}
@@ -105,10 +100,18 @@ jobs:
         gh release create "$TAG" \
           --title "$TITLE" \
           --generate-notes \
-          --notes-start-tag $(gh release list --limit 1 --json tagName -q .[].tagName) 
+          --notes-start-tag $(gh release list --limit 1 --json tagName -q .[].tagName)
+
+    - name: Login to registry
+      if: env.RELEASE_VERSION != '' && github.event_name != 'pull_request'
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ env.USERNAME }}
+        password: ${{ github.token }}
 
     - name: "Build and publish container"
-      if: github.event_name != 'pull_request' && env.RELEASE_VERSION != ''
+      if: env.RELEASE_VERSION != '' && github.event_name != 'pull_request'
       env:
         TAG: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       run: |
@@ -117,8 +120,9 @@ jobs:
         docker tag "$TAG:$VERSION" "$TAG:latest"
         docker push "$TAG:$VERSION"
         docker push "$TAG:latest"
+
     - name: Build and publish to PyPI
-      if: github.event_name != 'pull_request' && env.RELEASE_VERSION != ''
+      if: env.RELEASE_VERSION != '' && github.event_name != 'pull_request'
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
