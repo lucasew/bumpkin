@@ -1,27 +1,24 @@
 [tools]
-uv = "latest"
-ruff = "latest"
+uv = "0.5.11"
+trunk = "1.3.4"
+node = "22.11.0"
 
 [tasks.install]
 run = "uv sync --extra dev"
 description = "Install the project in dev mode."
 
 [tasks.fmt]
-run = "ruff format ."
-description = "Format code using ruff."
-
-[tasks."fmt:check"]
-run = "ruff format --check ."
-description = "Check code formatting using ruff."
+run = "trunk fmt"
+description = "Format code using trunk."
 
 [tasks.lint]
-run = "ruff check ."
-description = "Run ruff linter."
+run = "trunk check --ci"
+description = "Run trunk linter."
 
 [tasks."test:pytest"]
 run = "uv run pytest -v --cov-config .coveragerc --cov=bumpkin -l --tb=short --maxfail=1 tests/"
 description = "Run pytest."
-depends = ["install", "lint"]
+depends = ["install"]
 
 [tasks."test:coverage-xml"]
 run = "uv run coverage xml"
@@ -37,10 +34,10 @@ depends = ["test:pytest"]
 description = "Run all tests."
 depends = ["test:*"]
 
-[tasks.check]
-description = "Run all checks for pull requests."
-depends = ["fmt:check", "lint", "test"]
-
-[tasks."lint-and-test"]
-description = "Run linting and tests."
+[tasks.ci]
+description = "Run all checks for CI."
 depends = ["lint", "test"]
+
+[tasks.codegen]
+run = "echo 'No codegen tasks defined'"
+description = "Update any generated code."
