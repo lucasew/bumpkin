@@ -12,7 +12,7 @@ run = "trunk fmt"
 description = "Format code using trunk."
 
 [tasks.lint]
-run = "trunk check"
+run = "trunk check --ci"
 description = "Run trunk linter."
 
 [tasks."test:pytest"]
