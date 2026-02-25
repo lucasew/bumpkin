@@ -1,0 +1,1 @@
+- 2025-02-17: Errors swallowed by logging-only catch blocks mask downstream failures and violate centralized reporting rules.
