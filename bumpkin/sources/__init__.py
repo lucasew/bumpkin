@@ -5,6 +5,7 @@ from .base import BaseSource
 from .basicgithub import BasicGitHubSource
 from .basichttp import BasicHTTPSource
 from .basichttpjsonvendor import BasicHTTPJSONVendorSource
+from ..error import report_error
 
 logger = logging.getLogger(__name__)
 
@@ -51,23 +52,14 @@ def eval_node(declaration, previous_data=dict()):
         ret["_bpk_last_update"] = int(time())
         return ret
     except request.HTTPError as e:
-        logger.info(
-            f"Unhandled HTTP error while evaluating node {declaration}, saving old state..."  # noqa: E501
-        )
-        logger.info(e)
-    except Exception as e:
-        logger.info(
-            f"Unhandled generic exception while evaluating node {declaration}, saving old state"  # noqa: E501
-        )
-        logger.info(e)
+        report_error(e, context={"declaration": declaration}, level=logging.ERROR)
     except KeyboardInterrupt as e:
         logger.info("Saving work and exiting...")
         raise e
     except AssertionError as e:
-        logger.info(
-            f"Failed assertion while evaluating node {declaration}, saving old state"  # noqa: E501
-        )
-        logger.info(e)
+        report_error(e, context={"declaration": declaration}, level=logging.ERROR)
+    except Exception as e:
+        report_error(e, context={"declaration": declaration}, level=logging.ERROR)
 
     return previous_data
 

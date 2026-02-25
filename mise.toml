@@ -1,6 +1,6 @@
 [tools]
-uv = "latest"
-ruff = "latest"
+uv = "0.6.17"
+ruff = "0.9.10"
 
 [tasks.install]
 run = "uv sync --extra dev"
