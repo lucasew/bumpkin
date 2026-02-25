@@ -2,6 +2,7 @@ import logging
 
 logger = logging.getLogger("bumpkin.error")
 
+
 def report_error(exception, context=None, level=logging.ERROR):
     """
     Centralized error reporting function.
