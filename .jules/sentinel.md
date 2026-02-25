@@ -1,0 +1,1 @@
+- 2026-02-25: [High] Unvalidated URL schemes in downloaders enable SSRF/LFI (e.g. file://).
