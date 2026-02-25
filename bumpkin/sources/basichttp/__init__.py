@@ -15,6 +15,12 @@ class BasicHTTPSource(BaseSource):
         user_agent="curl/7.83.1",
         **kwargs,
     ):
+        from urllib.parse import urlparse
+
+        parsed = urlparse(url)
+        if parsed.scheme not in ("http", "https"):
+            raise ValueError(f"Invalid URL scheme: {parsed.scheme}")
+
         self.url = url
         self.user_agent = user_agent
         self.rehash_if_same_url = rehash_if_same_url
