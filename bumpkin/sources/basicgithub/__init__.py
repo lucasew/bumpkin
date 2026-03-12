@@ -8,6 +8,16 @@ PREFIXES = ["", "/heads", "/tags"]
 
 
 class BasicGitHubSource(BaseSource):
+    """
+    Source implementation that tracks a specific GitHub repository reference
+    (e.g., branch or tag) and downloads an archive of the code.
+
+    This source discovers the latest commit hash for the reference using the
+    GitHub matching-refs API, ensuring updates trigger when the ref points to a
+    new commit. If a matching ref is not explicitly provided, it will fallback
+    to the repository's default branch.
+    """
+
     SOURCE_KEY = "basicgithub"
 
     def __init__(
@@ -20,6 +30,9 @@ class BasicGitHubSource(BaseSource):
         rehash_if_same_url=False,
         **kwargs,
     ):
+        """
+        Initializes the GitHub source config.
+        """
         self.owner = owner
         self.repo = repo
         self.ref = ref
@@ -34,6 +47,9 @@ class BasicGitHubSource(BaseSource):
         ], "file type must be either zip or tar.gz"
 
     def _get_default_branch(self):
+        """
+        Queries the GitHub API to retrieve the default branch name of the repository.
+        """
         from json import load
         from urllib import request
 
@@ -45,6 +61,14 @@ class BasicGitHubSource(BaseSource):
         return f"heads/{branch}"
 
     def reduce(self, **kwargs):
+        """
+        Evaluates the GitHub repository's ref to find the latest commit hash.
+
+        If the final archive URL matches the previously processed URL (unless
+        `rehash_if_same_url` is True), it skips downloading and hashing to
+        optimize performance. Returns updated state containing the matched commit
+        hash, file type, final download URL, and sha256.
+        """
         from json import load
         from urllib import request
 
