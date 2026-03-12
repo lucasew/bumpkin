@@ -18,6 +18,12 @@ default_sources = [
 
 
 def setup_source(source):
+    """
+    Registers a new source class into the global sources dictionary.
+
+    Validates that the provided class subclasses `BaseSource` and that its
+    `SOURCE_KEY` (e.g. '_type' in JSON) is unique.
+    """
     assert issubclass(source, BaseSource), f"class {source} is not based on BaseSource"
     assert sources.get(source.SOURCE_KEY) is None, (
         f"class {source} has the samekey ({source.SOURCE_KEY}) as {sources.get(source.SOURCE_KEY)}"
@@ -30,6 +36,14 @@ for default_source in default_sources:
 
 
 def eval_node(declaration, previous_data=dict()):
+    """
+    Processes a single node payload, resolving its intended source type and dispatching
+    it to that source's `reduce` method.
+
+    Injects `_bpk_last_update` with the current timestamp into the result upon success.
+    Captures unhandled exceptions and HTTP errors gracefully, returning the previous
+    state rather than failing the entire evaluation tree.
+    """
     from time import time
     from urllib import request
 
@@ -88,6 +102,12 @@ def get_subcommands(subparser):
 
 
 def list_nodes(declaration=None, previous_data=None, _key=[]):
+    """
+    Flattens the deeply nested JSON declaration structure into a dot-notated dictionary.
+
+    Returns a mapping of dot-separated paths (e.g. "x86_64-linux.stable") to their
+    last updated timestamp. This allows determining evaluation ordering based on age.
+    """
     if type(declaration) is not dict:
         return {}
     if declaration.get("_type") is None:
@@ -116,6 +136,13 @@ def list_nodes(declaration=None, previous_data=None, _key=[]):
 
 
 def eval_nodes_recursively(declaration=None, previous_data=None):
+    """
+    Walks the nested declaration tree structure, evaluating each valid node.
+
+    Recursively delegates to `eval_node` if a dictionary includes a `_type` field,
+    otherwise continues traversing child nodes. Rejects lists because structural
+    shifts cannot be mapped deterministically.
+    """
     if isinstance(declaration, dict):
         if declaration.get("_type"):
             return eval_node(
@@ -152,6 +179,13 @@ def eval_nodes_key(declaration=None, previous_data=None, key=[]):
 
 
 def eval_nodes(declaration=None, previous_data=None, keys=[]):
+    """
+    Coordinates the top-level evaluation of the node graph.
+
+    Supports partial evaluations by specifying `keys` to bump only targeted nodes.
+    Discovers all nodes, sorts them by their previous `_bpk_last_update` timestamp
+    (prioritizing older nodes), and serially updates each requested branch.
+    """
     listed_nodes = list_nodes(declaration, previous_data)
     _keys = []
     for key in keys:

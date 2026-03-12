@@ -6,6 +6,14 @@ logger = logging.getLogger(__name__)
 
 
 class BasicHTTPSource(BaseSource):
+    """
+    Standard source implementation for resolving and hashing files served over HTTP/HTTPS.
+
+    This source follows HTTP redirects to find the ultimate download location.
+    If the resolved final URL matches the cached URL from the previous state,
+    it skips the potentially expensive download/hashing step unless explicitly told otherwise.
+    """
+
     SOURCE_KEY = "basichttp"
 
     def __init__(
@@ -15,11 +23,20 @@ class BasicHTTPSource(BaseSource):
         user_agent="curl/7.83.1",
         **kwargs,
     ):
+        """
+        Initializes the HTTP source with the target URL.
+        """
         self.url = url
         self.user_agent = user_agent
         self.rehash_if_same_url = rehash_if_same_url
 
     def reduce(self, **kwargs):
+        """
+        Executes the HTTP GET request and calculates the sha256 checksum of the response.
+
+        Only streams and hashes the response body if the resolved (post-redirect) URL differs
+        from the previous final URL, reducing bandwidth and processing time.
+        """
         from urllib import request
 
         ret = kwargs
