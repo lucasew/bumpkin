@@ -106,12 +106,8 @@ def list_nodes(declaration=None, previous_data=None, _key=[]):
     else:
         ret = {}
         ret[".".join(_key)] = 1 if previous_data is not None else 0
-        try:
+        if isinstance(previous_data, dict) and "_bpk_last_update" in previous_data:
             ret[".".join(_key)] = previous_data["_bpk_last_update"]
-        except KeyError:
-            pass
-        except TypeError:
-            pass
         return ret
 
 
