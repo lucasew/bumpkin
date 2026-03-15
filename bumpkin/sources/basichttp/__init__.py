@@ -4,6 +4,8 @@ from ..base import BaseSource
 
 logger = logging.getLogger(__name__)
 
+CHUNK_SIZE = 16 * 1024
+
 
 class BasicHTTPSource(BaseSource):
     SOURCE_KEY = "basichttp"
@@ -41,7 +43,7 @@ class BasicHTTPSource(BaseSource):
 
             hasher = hashlib.sha256()
             while True:
-                buf = res.read(16 * 1024)
+                buf = res.read(CHUNK_SIZE)
                 if not buf:
                     break
                 hasher.update(buf)

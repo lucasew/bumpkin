@@ -5,6 +5,7 @@ from ..base import BaseSource
 logger = logging.getLogger(__name__)
 
 PREFIXES = ["", "/heads", "/tags"]
+CHUNK_SIZE = 16 * 1024
 
 
 class BasicGitHubSource(BaseSource):
@@ -118,7 +119,7 @@ class BasicGitHubSource(BaseSource):
 
             hasher = hashlib.sha256()
             while True:
-                buf = res.read(16 * 1024)
+                buf = res.read(CHUNK_SIZE)
                 if not buf:
                     break
                 hasher.update(buf)
