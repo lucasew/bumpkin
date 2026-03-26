@@ -29,7 +29,9 @@ for default_source in default_sources:
     setup_source(default_source)
 
 
-def eval_node(declaration, previous_data=dict()):
+def eval_node(declaration, previous_data=None):
+    if previous_data is None:
+        previous_data = {}
     from time import time
     from urllib import request
 
@@ -87,7 +89,9 @@ def get_subcommands(subparser):
         source.argparse(parser)
 
 
-def list_nodes(declaration=None, previous_data=None, _key=[]):
+def list_nodes(declaration=None, previous_data=None, _key=None):
+    if _key is None:
+        _key = []
     if type(declaration) is not dict:
         return {}
     if declaration.get("_type") is None:
@@ -137,7 +141,9 @@ def eval_nodes_recursively(declaration=None, previous_data=None):
     return declaration
 
 
-def eval_nodes_key(declaration=None, previous_data=None, key=[]):
+def eval_nodes_key(declaration=None, previous_data=None, key=None):
+    if key is None:
+        key = []
     if len(key) == 0:
         return eval_nodes_recursively(declaration, previous_data)
     ret = previous_data if type(previous_data) is dict else dict()
@@ -151,7 +157,9 @@ def eval_nodes_key(declaration=None, previous_data=None, key=[]):
     return ret
 
 
-def eval_nodes(declaration=None, previous_data=None, keys=[]):
+def eval_nodes(declaration=None, previous_data=None, keys=None):
+    if keys is None:
+        keys = []
     listed_nodes = list_nodes(declaration, previous_data)
     _keys = []
     for key in keys:

@@ -1,0 +1,1 @@
+- 2026-03-26: Never use mutable objects like lists or dictionaries as default arguments in Python functions.
